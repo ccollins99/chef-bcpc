@@ -16,6 +16,8 @@
 # limitations under the License.
 #
 
+include_recipe "bcpc::certs"
+
 rally_user = node['bcpc']['rally']['user']
 rally_home_dir = node['etc']['passwd'][rally_user]['dir']
 rally_install_dir = "#{rally_home_dir}/rally"
@@ -41,7 +43,7 @@ end
 bash 'create virtual env for rally' do
   code <<-EOH
     mkdir "#{rally_install_dir}"
-    pip install --user virtualenv
+    pip install --user --upgrade virtualenv
     #{rally_home_dir}/.local/bin/virtualenv "#{rally_venv_dir}"
   EOH
   user rally_user
@@ -50,7 +52,7 @@ end
 bash 'install-rally' do
   code <<-EOH
     #{rally_venv_dir}/bin/pip install pbr cffi
-    #{rally_venv_dir}/bin/pip install rally
+    #{rally_venv_dir}/bin/pip install rally==0.9.1
   EOH
   user rally_user
 end
