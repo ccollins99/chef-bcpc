@@ -31,7 +31,12 @@ bash "run rally" do
     source #{rally_venv_dir}/bin/activate
     rally deployment use #{rally_deployment}
     rally task start --task-args-file cluster_configs/#{node.chef_environment}.yaml --task scenarios/sanity.yaml
-    rally task sla-check
+    if rally task sla-check | grep -c "FAIL"; then
+      report_name=sanity-$(date +"%Y%m%d%H%M%S").html
+      rally task report --out $report_name
+      echo "Sanity check failed, please examine the rally report $report_name"
+      exit 1
+    fi
   EOH
   user rally_user
 end
