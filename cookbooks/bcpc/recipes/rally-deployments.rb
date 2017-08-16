@@ -26,6 +26,12 @@ rally_install_dir = "#{rally_home_dir}/rally"
 rally_venv_dir = "#{rally_install_dir}/venv"
 rally_deployment = "v2.0"
 
+directory "/tmp/rally" do
+  owner rally_user
+  group rally_user
+  mode 00755
+  action :create
+end
 # Have the image file ready for image based tests
 cookbook_file "/tmp/rally/cirros-0.3.4-x86_64-disk.img" do
     source "cirros-0.3.4-x86_64-disk.img"
@@ -73,6 +79,3 @@ KEYSTONE_API_VERSIONS.each do |version|
       EOH
   end
 end
-
-# This will also setup keys that are probably not necessary...
-include_recipe "bcpc::certs"

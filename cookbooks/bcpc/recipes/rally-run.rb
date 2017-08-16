@@ -31,6 +31,7 @@ bash "run rally" do
     source #{rally_venv_dir}/bin/activate
     rally deployment use #{rally_deployment}
     rally task start --task-args-file cluster_configs/#{node.chef_environment}.yaml --task scenarios/sanity.yaml
+    rally task sla-check
   EOH
   user rally_user
 end
